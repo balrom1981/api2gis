@@ -77,7 +77,8 @@ public class TestApi2Gis {
                 .body("error.message", equalTo("Параметр 'q' должен быть не менее 3 символов"));
     }
 
-    @Description("validate that only query param q='орск' works, second query param country_code=ru doesn't work")
+    @Description("validate that only query param q='орск' works, second query param " +
+            "country_code=ru doesn't work")
     @Test
     public void validateQueryParamsResultsQandCountry() {
         given()
@@ -171,7 +172,8 @@ public class TestApi2Gis {
                 .assertThat()
                 .statusCode(200)
                 .contentType(ContentType.JSON)
-                .body("error.message", equalTo("Параметр 'country_code' может быть одним из следующих значений: ru, kg, kz, cz"));
+                .body("error.message", equalTo("Параметр 'country_code' может быть одним из " +
+                        "следующих значений: ru, kg, kz, cz"));
     }
 
     @Description("validate error message received when query param page='' ")
@@ -193,6 +195,20 @@ public class TestApi2Gis {
     public void validatePagesEmptyQueryParamOnePointFive() {
         given().
                 queryParam("page", "1.5").
+                when()
+                .request("GET", baseUrl)
+                .then()
+                .log().all()
+                .statusCode(200)
+                .assertThat()
+                .body("error.message", equalTo("Параметр 'page' длжен быть целым числом"));
+    }
+
+    @Description("validate error message received when query param page=0")
+    @Test
+    public void validatePagesEmptyQueryParamZero() {
+        given().
+                queryParam("page", "0").
                 when()
                 .request("GET", baseUrl)
                 .then()
@@ -281,6 +297,8 @@ public class TestApi2Gis {
                 .log().all()
                 .statusCode(200)
                 .assertThat()
-                .body("error.message", equalTo("Параметр 'page_size' может быть одним из следующих значений: 5, 10, 15"));
+                .body("error.message", equalTo("Параметр 'page_size' может быть одним из следующих " +
+                        "значений: 5, 10, 15"));
     }
+
 }
